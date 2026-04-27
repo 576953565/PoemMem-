@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <title>排行榜 - 古诗填空练习</title>
+    <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+    <div class="top-navbar" id="topNavbar">
+        <div class="navbar-left">
+            <a href="index.html" class="navbar-link" id="navHome">首页</a>
+            <a href="profile.html" class="navbar-link" id="navProfile">个人中心</a>
+            <a href="leaderboard.html" class="navbar-link active" id="navLeaderboard">排行榜</a>
+            <a href="member.html" class="navbar-link" id="navMember" style="display: none;">成员管理</a>
+        </div>
+        <div class="navbar-right">
+            <div class="user-dropdown" id="userDropdown">
+                <div class="user-dropdown-toggle" onclick="toggleDropdown()">
+                    <span id="navUserName"></span>
+                    <span class="dropdown-arrow">▼</span>
+                </div>
+                <div class="user-dropdown-menu" id="userDropdownMenu">
+                    <a href="profile.html" class="dropdown-item">个人中心</a>
+                    <a href="#" class="dropdown-item" id="menuMember" style="display: none;" onclick="goToMember()">成员管理</a>
+                    <a href="#" class="dropdown-item" onclick="logout()">退出登录</a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="container" style="max-width: 1400px;">
+        <h1>排行榜</h1>
+        
+        <div class="leaderboard-cards" id="leaderboardList">
+            <!-- Leaderboard cards will be loaded here -->
+        </div>
+    </div>
+
+    <!-- Personal Signature Modal -->
+    <div class="modal" id="speechModal">
+        <div class="modal-content">
+            <span class="close">&times;</span>
+            <h3>发表个性签名</h3>
+            <textarea id="speechContent" placeholder="请输入您的个性签名..." rows="4"></textarea>
+            <div class="modal-buttons">
+                <button class="btn" onclick="submitSpeech()">提交</button>
+                <button class="btn btn-secondary" onclick="closeSpeechModal()">取消</button>
+            </div>
+        </div>
+    </div>
+
+    <div class="toast" id="toast"></div>
+    <script src="js/leaderboard.js"></script>
+</body>
+</html>

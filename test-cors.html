@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>CORS Test</title>
+</head>
+<body>
+    <h1>CORS Test</h1>
+    <button onclick="testLike()">Test Like</button>
+    <button onclick="testDislike()">Test Dislike</button>
+    <button onclick="testComments()">Test Comments</button>
+    <div id="result"></div>
+
+    <script>
+        function showResult(message) {
+            document.getElementById('result').innerHTML = message;
+        }
+
+        async function testLike() {
+            try {
+                const response = await fetch('http://localhost:3001/api/leaderboard/speeches/1/like', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Authorization': 'Bearer test-token'
+                    }
+                });
+                const data = await response.json();
+                showResult('Like test: ' + JSON.stringify(data));
+            } catch (error) {
+                showResult('Like test error: ' + error.message);
+            }
+        }
+
+        async function testDislike() {
+            try {
+                const response = await fetch('http://localhost:3001/api/leaderboard/speeches/1/dislike', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Authorization': 'Bearer test-token'
+                    }
+                });
+                const data = await response.json();
+                showResult('Dislike test: ' + JSON.stringify(data));
+            } catch (error) {
+                showResult('Dislike test error: ' + error.message);
+            }
+        }
+
+        async function testComments() {
+            try {
+                const response = await fetch('http://localhost:3001/api/leaderboard/speeches/1/comments');
+                const data = await response.json();
+                showResult('Comments test: ' + JSON.stringify(data));
+            } catch (error) {
+                showResult('Comments test error: ' + error.message);
+            }
+        }
+    </script>
+</body>
+</html>

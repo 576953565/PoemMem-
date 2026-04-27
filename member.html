@@ -1,0 +1,422 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <title>成员管理 - 古诗填空练习</title>
+    <link rel="stylesheet" href="css/style.css">
+    <style>
+        .member-container {
+            max-width: 1200px;
+            margin: 80px auto 30px;
+            padding: 20px;
+        }
+        .member-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 30px;
+        }
+        .member-title {
+            font-size: 28px;
+            color: #333;
+            margin: 0;
+        }
+        .member-table {
+            width: 100%;
+            border-collapse: collapse;
+            background: white;
+            border-radius: 10px;
+            overflow: hidden;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+        .member-table th,
+        .member-table td {
+            padding: 15px 20px;
+            text-align: left;
+            border-bottom: 1px solid #eee;
+        }
+        .member-table th {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            font-weight: normal;
+        }
+        .member-table tr:last-child td {
+            border-bottom: none;
+        }
+        .member-table tr:hover {
+            background-color: #f8f9fa;
+        }
+        .member-table .avatar-cell {
+            width: 60px;
+        }
+        .member-table .avatar {
+            width: 45px;
+            height: 45px;
+            border-radius: 50%;
+            object-fit: cover;
+        }
+        .member-table .actions {
+            width: 200px;
+        }
+        .member-table .btn-sm {
+            padding: 5px 12px;
+            font-size: 13px;
+            margin-right: 5px;
+        }
+        .member-table .btn-danger {
+            background: #dc3545;
+            color: white;
+            border: none;
+        }
+        .member-table .btn-danger:hover {
+            background: #c82333;
+        }
+        .member-table .admin-badge {
+            background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+            color: white;
+            padding: 3px 10px;
+            border-radius: 20px;
+            font-size: 12px;
+        }
+        .member-table .user-badge {
+            background: #6c757d;
+            color: white;
+            padding: 3px 10px;
+            border-radius: 20px;
+            font-size: 12px;
+        }
+        .modal {
+            display: none;
+            position: fixed;
+            z-index: 1000;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0,0,0,0.5);
+        }
+        .modal-content {
+            background-color: white;
+            margin: 10% auto;
+            padding: 30px;
+            border-radius: 10px;
+            width: 400px;
+            max-width: 90%;
+        }
+        .modal-content h3 {
+            margin-top: 0;
+            color: #333;
+        }
+        .form-group {
+            margin-bottom: 20px;
+        }
+        .form-group label {
+            display: block;
+            margin-bottom: 5px;
+            color: #666;
+        }
+        .form-group input,
+        .form-group select {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            font-size: 14px;
+            box-sizing: border-box;
+        }
+        .modal-buttons {
+            text-align: right;
+            margin-top: 20px;
+        }
+        .modal-buttons .btn {
+            margin-left: 10px;
+        }
+        .back-link {
+            color: #667eea;
+            text-decoration: none;
+            font-size: 14px;
+        }
+        .back-link:hover {
+            text-decoration: underline;
+        }
+    </style>
+</head>
+<body>
+    <div class="top-navbar" id="topNavbar">
+        <div class="navbar-left">
+            <a href="index.html" class="navbar-link" id="navHome">首页</a>
+            <a href="profile.html" class="navbar-link" id="navProfile">个人中心</a>
+            <a href="leaderboard.html" class="navbar-link" id="navLeaderboard">排行榜</a>
+            <a href="member.html" class="navbar-link active" id="navMember">成员管理</a>
+        </div>
+        <div class="navbar-right">
+            <div class="user-dropdown" id="userDropdown">
+                <div class="user-dropdown-toggle" onclick="toggleDropdown()">
+                    <span id="navUserName"></span>
+                    <span class="dropdown-arrow">▼</span>
+                </div>
+                <div class="user-dropdown-menu" id="userDropdownMenu">
+                    <a href="profile.html" class="dropdown-item">个人中心</a>
+                    <a href="#" class="dropdown-item" onclick="logout()">退出登录</a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="member-container">
+        <div class="member-header">
+            <h1 class="member-title">成员管理</h1>
+            <a href="index.html" class="back-link">← 返回首页</a>
+        </div>
+
+        <table class="member-table">
+            <thead>
+                <tr>
+                    <th class="avatar-cell">头像</th>
+                    <th>ID</th>
+                    <th>用户名</th>
+                    <th>身份</th>
+                    <th>注册时间</th>
+                    <th class="actions">操作</th>
+                </tr>
+            </thead>
+            <tbody id="memberList">
+                <tr>
+                    <td colspan="6" style="text-align: center; color: #666;">加载中...</td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+
+    <div class="modal" id="editModal">
+        <div class="modal-content">
+            <h3>编辑用户</h3>
+            <input type="hidden" id="editUserId">
+            <div class="form-group">
+                <label>用户名</label>
+                <input type="text" id="editUsername">
+            </div>
+            <div class="form-group">
+                <label>新密码（留空则不修改）</label>
+                <input type="password" id="editPassword" placeholder="请输入新密码">
+            </div>
+            <div class="form-group">
+                <label>身份</label>
+                <select id="editIsAdmin">
+                    <option value="0">普通用户</option>
+                    <option value="1">超级管理员</option>
+                </select>
+            </div>
+            <div class="modal-buttons">
+                <button class="btn btn-secondary" onclick="closeEditModal()">取消</button>
+                <button class="btn" onclick="saveUser()">保存</button>
+            </div>
+        </div>
+    </div>
+
+    <div class="toast" id="toast"></div>
+
+    <script>
+        let token = localStorage.getItem('token');
+        let user = JSON.parse(localStorage.getItem('user'));
+
+        function showToast(message) {
+            const toast = document.getElementById('toast');
+            toast.textContent = message;
+            toast.classList.add('show');
+            setTimeout(() => {
+                toast.classList.remove('show');
+            }, 3000);
+        }
+
+        function toggleDropdown() {
+            const menu = document.getElementById('userDropdownMenu');
+            menu.classList.toggle('show');
+        }
+
+        document.addEventListener('click', function(e) {
+            const dropdown = document.getElementById('userDropdown');
+            if (!dropdown.contains(e.target)) {
+                const menu = document.getElementById('userDropdownMenu');
+                if (menu.classList.contains('show')) {
+                    menu.classList.remove('show');
+                }
+            }
+        });
+
+        function logout() {
+            token = null;
+            user = null;
+            localStorage.removeItem('token');
+            localStorage.removeItem('user');
+            window.location.href = 'login.html';
+        }
+
+        window.onload = async function() {
+            if (!token) {
+                window.location.href = 'login.html';
+                return;
+            }
+
+            if (!user || !user.is_admin) {
+                showToast('您没有权限访问此页面');
+                setTimeout(() => {
+                    window.location.href = 'index.html';
+                }, 2000);
+                return;
+            }
+
+            document.getElementById('navUserName').textContent = user.username;
+            loadMembers();
+        };
+
+        async function loadMembers() {
+            try {
+                const response = await fetch('http://localhost:3001/api/admin/users', {
+                    headers: {
+                        'Authorization': `Bearer ${token}`
+                    }
+                });
+
+                if (!response.ok) {
+                    if (response.status === 403) {
+                        showToast('需要管理员权限');
+                        window.location.href = 'index.html';
+                        return;
+                    }
+                    throw new Error('获取成员列表失败');
+                }
+
+                const data = await response.json();
+
+                if (data.error) {
+                    showToast(data.error);
+                    return;
+                }
+
+                let html = '';
+                if (data.users && data.users.length > 0) {
+                    data.users.forEach(member => {
+                        const avatar = member.profile_picture || 'https://trae-api-cn.mchost.guru/api/ide/v1/text_to_image?prompt=profile%20picture%20of%20a%20student&image_size=square';
+                        const createdAt = new Date(member.created_at + 'Z').toLocaleString('zh-CN');
+
+                        html += `
+                            <tr>
+                                <td class="avatar-cell">
+                                    <img src="${avatar}" alt="${member.username}" class="avatar">
+                                </td>
+                                <td>${member.id}</td>
+                                <td>${member.username}</td>
+                                <td>
+                                    ${member.is_admin ?
+                                        '<span class="admin-badge">超级管理员</span>' :
+                                        '<span class="user-badge">普通用户</span>'}
+                                </td>
+                                <td>${createdAt}</td>
+                                <td class="actions">
+                                    <button class="btn btn-sm" onclick="openEditModal(${member.id}, '${member.username}', ${member.is_admin})">编辑</button>
+                                    ${member.id !== 1 ? '<button class="btn btn-sm btn-danger" onclick="deleteUser(' + member.id + ')">删除</button>' : ''}
+                                </td>
+                            </tr>
+                        `;
+                    });
+                } else {
+                    html = '<tr><td colspan="6" style="text-align: center; color: #666;">暂无成员数据</td></tr>';
+                }
+
+                document.getElementById('memberList').innerHTML = html;
+            } catch (error) {
+                console.error('加载成员列表失败:', error);
+                showToast('加载成员列表失败');
+            }
+        }
+
+        function openEditModal(userId, username, isAdmin) {
+            document.getElementById('editUserId').value = userId;
+            document.getElementById('editUsername').value = username;
+            document.getElementById('editPassword').value = '';
+            document.getElementById('editIsAdmin').value = isAdmin ? '1' : '0';
+            document.getElementById('editModal').style.display = 'block';
+        }
+
+        function closeEditModal() {
+            document.getElementById('editModal').style.display = 'none';
+        }
+
+        async function saveUser() {
+            const userId = document.getElementById('editUserId').value;
+            const username = document.getElementById('editUsername').value.trim();
+            const password = document.getElementById('editPassword').value;
+            const isAdmin = document.getElementById('editIsAdmin').value === '1';
+
+            if (!username) {
+                showToast('用户名不能为空');
+                return;
+            }
+
+            try {
+                const body = { username, is_admin: isAdmin };
+                if (password) {
+                    body.password = password;
+                }
+
+                const response = await fetch(`http://localhost:3001/api/admin/users/${userId}`, {
+                    method: 'PUT',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Authorization': `Bearer ${token}`
+                    },
+                    body: JSON.stringify(body)
+                });
+
+                const data = await response.json();
+
+                if (data.error) {
+                    showToast(data.error);
+                } else {
+                    showToast('用户更新成功');
+                    closeEditModal();
+                    loadMembers();
+                }
+            } catch (error) {
+                console.error('更新用户失败:', error);
+                showToast('更新用户失败');
+            }
+        }
+
+        async function deleteUser(userId) {
+            if (!confirm('确定要删除此用户吗？此操作不可撤销。')) {
+                return;
+            }
+
+            try {
+                const response = await fetch(`http://localhost:3001/api/admin/users/${userId}`, {
+                    method: 'DELETE',
+                    headers: {
+                        'Authorization': `Bearer ${token}`
+                    }
+                });
+
+                const data = await response.json();
+
+                if (data.error) {
+                    showToast(data.error);
+                } else {
+                    showToast('用户删除成功');
+                    loadMembers();
+                }
+            } catch (error) {
+                console.error('删除用户失败:', error);
+                showToast('删除用户失败');
+            }
+        }
+
+        window.onclick = function(event) {
+            const modal = document.getElementById('editModal');
+            if (event.target == modal) {
+                closeEditModal();
+            }
+        };
+    </script>
+</body>
+</html>

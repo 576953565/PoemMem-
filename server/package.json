@@ -1,0 +1,15 @@
+{
+  "name": "chinese-poetry-backend",
+  "version": "1.0.0",
+  "description": "Backend for Chinese poetry practice system",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js",
+    "init-db": "node init-db.js"
+  },
+  "dependencies": {
+    "express": "^4.18.2",
+    "jsonwebtoken": "^9.0.3",
+    "sqlite3": "^5.1.6"
+  }
+}

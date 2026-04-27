@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <title>个人中心 - 古诗填空练习</title>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+    <div class="top-navbar" id="topNavbar">
+        <div class="navbar-left">
+            <a href="index.html" class="navbar-link" id="navHome">首页</a>
+            <a href="profile.html" class="navbar-link active" id="navProfile">个人中心</a>
+            <a href="leaderboard.html" class="navbar-link" id="navLeaderboard">排行榜</a>
+            <a href="member.html" class="navbar-link" id="navMember" style="display: none;">成员管理</a>
+        </div>
+        <div class="navbar-right">
+            <div class="user-dropdown" id="userDropdown">
+                <div class="user-dropdown-toggle" onclick="toggleDropdown()">
+                    <span id="navUserName"></span>
+                    <span class="dropdown-arrow">▼</span>
+                </div>
+                <div class="user-dropdown-menu" id="userDropdownMenu">
+                    <a href="profile.html" class="dropdown-item">个人中心</a>
+                    <a href="#" class="dropdown-item" id="menuMember" style="display: none;" onclick="goToMember()">成员管理</a>
+                    <a href="#" class="dropdown-item" onclick="logout()">退出登录</a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="container">
+        <div class="profile-screen active" id="profileScreen">
+            <div class="profile-header">
+                <h1>个人中心</h1>
+            </div>
+
+            <div class="profile-content">
+                <div class="profile-section">
+                    <h3>修改个人信息</h3>
+                    <div class="form-group">
+                        <label>用户名</label>
+                        <input type="text" id="profileUsername" placeholder="请输入新用户名">
+                    </div>
+                    <div class="form-group">
+                        <label>新密码</label>
+                        <input type="password" id="profilePassword" placeholder="请输入新密码（留空则不修改）">
+                    </div>
+                    <div class="form-group">
+                        <label>确认密码</label>
+                        <input type="password" id="profilePasswordConfirm" placeholder="请再次输入新密码">
+                    </div>
+                    <button class="btn" onclick="updateProfile()">保存修改</button>
+                </div>
+
+                <div class="profile-section">
+                    <h3>历史分数</h3>
+                    <div class="chart-container">
+                        <canvas id="scoreChart"></canvas>
+                    </div>
+                </div>
+
+                <div class="profile-section">
+                    <h3>答题记录</h3>
+                    <div id="historyScoresList"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="toast" id="toast"></div>
+    <script src="js/profile.js"></script>
+</body>
+</html>

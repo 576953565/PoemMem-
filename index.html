@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <title>古诗填空练习</title>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+    <div class="top-navbar" id="topNavbar">
+        <div class="navbar-left">
+            <a href="index.html" class="navbar-link active" id="navHome">首页</a>
+            <a href="profile.html" class="navbar-link" id="navProfile" target="_self">个人中心</a>
+            <a href="leaderboard.html" class="navbar-link" id="navLeaderboard">排行榜</a>
+            <a href="member.html" class="navbar-link" id="navMember" style="display: none;">成员管理</a>
+        </div>
+        <div class="navbar-right">
+            <div class="user-dropdown" id="userDropdown">
+                <div class="user-dropdown-toggle" onclick="toggleDropdown()">
+                    <span id="navUserName"></span>
+                    <span class="dropdown-arrow">▼</span>
+                </div>
+                <div class="user-dropdown-menu" id="userDropdownMenu">
+                    <a href="profile.html" class="dropdown-item">个人中心</a>
+                    <a href="#" class="dropdown-item" id="menuMember" style="display: none;" onclick="goToMember()">成员管理</a>
+                    <a href="#" class="dropdown-item" onclick="logout()">退出登录</a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="speeches-card">
+        <h3>个性签名</h3>
+        <div class="speeches-container">
+            <div class="speeches-scroll" id="speechesContainer">
+                <!-- Victory speeches will be loaded here -->
+            </div>
+        </div>
+    </div>
+
+    <div class="container">
+        <h1>古诗填空练习</h1>
+
+        <div class="start-screen" id="startScreen">
+            <div class="start-layout">
+                <div class="start-center">
+                   
+                    <div style="text-align: center; padding: 50px 0;">
+                        <p style="font-size: 18px; color: #666; margin-bottom: 30px;">
+                            系统将随机抽取10句古诗<br>
+                            显示上半句或下半句<br>
+                            请填写对应的另一句
+                        </p>
+                        <p style="font-size: 16px; color: #999; margin-bottom: 40px;">
+                            每题10分，满分100分
+                        </p>
+                        <div class="start-btn-container">
+                            <button class="btn" onclick="startQuiz()">开始答题</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="quiz-screen" id="quizScreen">
+            <div class="progress-bar">
+                <div class="progress-fill" id="progressFill"></div>
+            </div>
+            <div class="quiz-layout">
+                <div class="quiz-main">
+                    <div id="questionContainer"></div>
+                </div>
+                <div class="quiz-sidebar">
+                    <h4 style="margin-bottom: 10px; color: #333;">题目导航</h4>
+                    <div class="question-nav" id="questionNav"></div>
+                </div>
+            </div>
+        </div>
+
+        <div class="result-screen" id="resultScreen">
+            <div class="result-header">
+                <div class="total-score" id="totalScore">0</div>
+                <div class="score-label">总得分</div>
+            </div>
+            <div class="result-detail" id="resultDetail"></div>
+            <div style="text-align: center; margin-top: 30px;">
+                <button class="btn" onclick="restartQuiz()">再来一次</button>
+                <button class="btn btn-secondary" onclick="goToStart()">返回首页</button>
+            </div>
+        </div>
+    </div>
+
+    <div class="toast" id="toast"></div>
+    <div class="submit-container" id="submitContainer">
+        <button class="btn" onclick="submitQuiz()">交卷</button>
+    </div>
+    <script src="js/script.js"></script>
+</body>
+</html>
