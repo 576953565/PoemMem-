@@ -3,11 +3,14 @@ const sqlite3 = require('sqlite3').verbose();
 const jwt = require('jsonwebtoken');
 
 const app = express();
-const port = 3001;
+const port = process.env.PORT || 3001;
 const secretKey = 'your-secret-key';
 const LEADERBOARD_LIMIT = 20; //排行榜最大数量
 
 app.use(express.json());
+
+const path = require('path');
+app.use(express.static(path.join(__dirname, '../')));
 
 app.use((req, res, next) => {
   res.setHeader('Access-Control-Allow-Origin', '*');
